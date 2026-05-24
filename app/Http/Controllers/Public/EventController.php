@@ -13,7 +13,7 @@ class EventController extends Controller
     {
         $categories = Category::where('is_active', true)->get();
 
-        $events = Event::with(['category', 'company'])
+        $events = Event::with(['category', 'company', 'ticketTypes'])
             ->where('status', 'published')
             ->where('approval_status', 'approved')
             ->when($request->search, function ($query, $search) {
@@ -44,7 +44,7 @@ class EventController extends Controller
 
         $event->increment('views_count');
 
-        $event->load(['category', 'company']);
+        $event->load(['category', 'company', 'ticketTypes', 'whatsappCta']);
 
         return view('public.events.show', compact('event'));
     }

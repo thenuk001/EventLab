@@ -45,4 +45,14 @@ class Event extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function ticketTypes()
+    {
+        return $this->hasMany(TicketType::class);
+    }
+
+    public function whatsappCta()
+    {
+        return $this->hasOne(WhatsappCta::class);
+    }
 }

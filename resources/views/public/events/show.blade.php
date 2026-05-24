@@ -80,16 +80,53 @@
                         Start your booking through WhatsApp. Event details will be included in the message.
                     </p>
 
-                    @php
-                        $phone = $event->company->whatsapp_number ?? '94771234567';
+                    @if($event->ticketTypes->count())
+                        <div class="mt-6 space-y-3">
+                            <p class="text-sm font-bold uppercase tracking-widest text-slate-400">
+                                Ticket Types
+                            </p>
 
-                        $message = "Hello EventLab, I would like to book tickets for {$event->title}. "
-                            . "Event ID: {$event->event_code}. "
-                            . "Date: {$event->event_date->format('Y-m-d')}. "
-                            . "Ticket Type: [Standard/VIP/etc.]. "
-                            . "Quantity: [ ]. "
-                            . "My name is [ ]. "
-                            . "Please confirm availability and payment details.";
+                            @foreach($event->ticketTypes as $ticket)
+                                <div class="rounded-2xl bg-slate-900 p-4">
+                                    <div class="flex items-start justify-between gap-4">
+                                        <div>
+                                            <h3 class="font-black text-white">{{ $ticket->name }}</h3>
+
+                                            @if($ticket->benefits)
+                                                <p class="mt-1 text-sm text-slate-400">
+                                                    {{ $ticket->benefits }}
+                                                </p>
+                                            @endif
+
+                                            <span class="mt-3 inline-flex rounded-full bg-green-500/20 px-3 py-1 text-xs font-bold text-green-200">
+                                                {{ str_replace('_', ' ', ucfirst($ticket->availability_status)) }}
+                                            </span>
+                                        </div>
+
+                                        <p class="whitespace-nowrap text-lg font-black text-orange-300">
+                                            LKR {{ number_format($ticket->price, 2) }}
+                                        </p>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    @php
+                        $cta = $event->whatsappCta;
+
+                        $phone = $cta?->booking_number
+                            ?? $event->company->whatsapp_number
+                            ?? '94771234567';
+
+                        $template = $cta?->template_message
+                            ?? 'Hello EventLab, I would like to book tickets for [Event Name]. Event ID: [Event ID]. Date: [Date]. Ticket Type: [Standard/VIP]. Quantity: [ ]. My name is [ ]. Please confirm availability and payment details.';
+
+                        $message = str_replace(
+                            ['[Event Name]', '[Event ID]', '[Date]'],
+                            [$event->title, $event->event_code, $event->event_date->format('Y-m-d')],
+                            $template
+                        );
 
                         $waUrl = 'https://wa.me/' . $phone . '?text=' . urlencode($message);
                     @endphp
@@ -99,7 +136,7 @@
                         target="_blank"
                         class="mt-6 block rounded-full bg-green-500 px-6 py-4 text-center text-lg font-black hover:bg-green-400"
                     >
-                        Book on WhatsApp
+                        {{ $event->whatsappCta?->cta_label ?? 'Book on WhatsApp' }}
                     </a>
 
                     <div class="mt-6 rounded-2xl bg-slate-900 p-5">
