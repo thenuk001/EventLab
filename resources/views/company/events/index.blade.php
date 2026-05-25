@@ -62,10 +62,17 @@
                                 </td>
 
                                 <td class="px-6 py-4">
-                                    <a href="{{ route('company.events.edit', $event) }}"
-                                       class="font-bold text-orange-600">
-                                        Edit
-                                    </a>
+                                    <div class="flex flex-col gap-2">
+                                        <a href="{{ route('company.events.edit', $event) }}"
+                                           class="font-bold text-orange-600">
+                                            Edit
+                                        </a>
+
+                                        <a href="{{ route('company.events.tickets.index', $event) }}"
+                                           class="font-bold text-green-600">
+                                            Tickets
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         @empty

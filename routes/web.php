@@ -8,6 +8,7 @@ use App\Http\Controllers\SuperAdmin\DashboardController as SuperDashboardControl
 use App\Http\Controllers\SuperAdmin\EventController as SuperAdminEventController;
 use App\Http\Controllers\Company\DashboardController as CompanyDashboardController;
 use App\Http\Controllers\Company\EventController as CompanyEventController;
+use App\Http\Controllers\Company\TicketTypeController as CompanyTicketTypeController;
 use App\Http\Controllers\Support\DashboardController as SupportDashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -43,6 +44,13 @@ Route::middleware(['auth', 'verified', 'role:company_admin'])
         Route::post('/events', [CompanyEventController::class, 'store'])->name('events.store');
         Route::get('/events/{event}/edit', [CompanyEventController::class, 'edit'])->name('events.edit');
         Route::put('/events/{event}', [CompanyEventController::class, 'update'])->name('events.update');
+
+        Route::get('/events/{event}/tickets', [CompanyTicketTypeController::class, 'index'])->name('events.tickets.index');
+        Route::get('/events/{event}/tickets/create', [CompanyTicketTypeController::class, 'create'])->name('events.tickets.create');
+        Route::post('/events/{event}/tickets', [CompanyTicketTypeController::class, 'store'])->name('events.tickets.store');
+        Route::get('/tickets/{ticketType}/edit', [CompanyTicketTypeController::class, 'edit'])->name('tickets.edit');
+        Route::put('/tickets/{ticketType}', [CompanyTicketTypeController::class, 'update'])->name('tickets.update');
+        Route::delete('/tickets/{ticketType}', [CompanyTicketTypeController::class, 'destroy'])->name('tickets.destroy');
     });
 
 Route::middleware(['auth', 'verified', 'role:support_staff'])
