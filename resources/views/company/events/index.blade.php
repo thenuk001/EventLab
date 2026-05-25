@@ -72,6 +72,11 @@
                                            class="font-bold text-green-600">
                                             Tickets
                                         </a>
+
+                                        <a href="{{ route('company.events.whatsapp.edit', $event) }}"
+                                           class="font-bold text-blue-600">
+                                            WhatsApp
+                                        </a>
                                     </div>
                                 </td>
                             </tr>

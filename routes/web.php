@@ -9,6 +9,7 @@ use App\Http\Controllers\SuperAdmin\EventController as SuperAdminEventController
 use App\Http\Controllers\Company\DashboardController as CompanyDashboardController;
 use App\Http\Controllers\Company\EventController as CompanyEventController;
 use App\Http\Controllers\Company\TicketTypeController as CompanyTicketTypeController;
+use App\Http\Controllers\Company\WhatsappCtaController as CompanyWhatsappCtaController;
 use App\Http\Controllers\Support\DashboardController as SupportDashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -51,6 +52,9 @@ Route::middleware(['auth', 'verified', 'role:company_admin'])
         Route::get('/tickets/{ticketType}/edit', [CompanyTicketTypeController::class, 'edit'])->name('tickets.edit');
         Route::put('/tickets/{ticketType}', [CompanyTicketTypeController::class, 'update'])->name('tickets.update');
         Route::delete('/tickets/{ticketType}', [CompanyTicketTypeController::class, 'destroy'])->name('tickets.destroy');
+
+        Route::get('/events/{event}/whatsapp', [CompanyWhatsappCtaController::class, 'edit'])->name('events.whatsapp.edit');
+        Route::put('/events/{event}/whatsapp', [CompanyWhatsappCtaController::class, 'update'])->name('events.whatsapp.update');
     });
 
 Route::middleware(['auth', 'verified', 'role:support_staff'])
