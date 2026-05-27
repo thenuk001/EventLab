@@ -15,7 +15,7 @@
                         </h1>
 
                         <p class="mt-3 text-slate-200">
-                            Manage your events, ticket types, WhatsApp booking settings, enquiries, and QR check-ins.
+                            Manage your events, ticket types, WhatsApp booking settings, enquiries, bookings, and QR check-ins.
                         </p>
                     </div>
 
@@ -41,22 +41,22 @@
             <div class="grid gap-6 md:grid-cols-4">
                 <div class="rounded-3xl bg-white p-6 shadow">
                     <p class="text-sm font-bold text-gray-500">Active Events</p>
-                    <h3 class="mt-3 text-4xl font-black">0</h3>
+                    <h3 class="mt-3 text-4xl font-black">{{ $activeEvents }}</h3>
                 </div>
 
                 <div class="rounded-3xl bg-white p-6 shadow">
                     <p class="text-sm font-bold text-gray-500">WhatsApp Clicks</p>
-                    <h3 class="mt-3 text-4xl font-black text-green-600">0</h3>
+                    <h3 class="mt-3 text-4xl font-black text-green-600">{{ $whatsappClicks }}</h3>
                 </div>
 
                 <div class="rounded-3xl bg-white p-6 shadow">
                     <p class="text-sm font-bold text-gray-500">Bookings</p>
-                    <h3 class="mt-3 text-4xl font-black text-orange-500">0</h3>
+                    <h3 class="mt-3 text-4xl font-black text-orange-500">{{ $bookings }}</h3>
                 </div>
 
                 <div class="rounded-3xl bg-white p-6 shadow">
                     <p class="text-sm font-bold text-gray-500">QR Check-ins</p>
-                    <h3 class="mt-3 text-4xl font-black text-purple-600">0</h3>
+                    <h3 class="mt-3 text-4xl font-black text-purple-600">{{ $qrCheckIns }}</h3>
                 </div>
             </div>
 
@@ -81,7 +81,7 @@
                    class="rounded-3xl bg-white p-6 shadow hover:shadow-lg">
                     <h3 class="text-xl font-black">WhatsApp Settings</h3>
                     <p class="mt-2 text-sm text-gray-500">
-                        Set booking numbers and message templates from each event.
+                        Set WhatsApp button labels and message templates from each event.
                     </p>
                 </a>
 
@@ -90,6 +90,14 @@
                     <h3 class="text-xl font-black">WhatsApp Enquiries</h3>
                     <p class="mt-2 text-sm text-gray-500">
                         View WhatsApp clicks and booking interest from public users.
+                    </p>
+                </a>
+
+                <a href="{{ route('company.bookings.index') }}"
+                   class="rounded-3xl bg-white p-6 shadow hover:shadow-lg">
+                    <h3 class="text-xl font-black">Bookings</h3>
+                    <p class="mt-2 text-sm text-gray-500">
+                        View confirmed bookings and generated QR ticket codes.
                     </p>
                 </a>
             </div>
