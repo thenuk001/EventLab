@@ -10,11 +10,19 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        return view('super-admin.dashboard', [
-            'totalCompanies' => Company::count(),
-            'approvedCompanies' => Company::where('approval_status', 'approved')->count(),
-            'pendingCompanies' => Company::where('approval_status', 'pending')->count(),
-            'totalUsers' => User::count(),
-        ]);
+        $totalCompanies = Company::count();
+
+        $approvedCompanies = Company::where('approval_status', 'approved')->count();
+
+        $pendingCompanies = Company::where('approval_status', 'pending')->count();
+
+        $totalUsers = User::count();
+
+        return view('super-admin.dashboard', compact(
+            'totalCompanies',
+            'approvedCompanies',
+            'pendingCompanies',
+            'totalUsers'
+        ));
     }
 }
