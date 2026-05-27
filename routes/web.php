@@ -13,6 +13,7 @@ use App\Http\Controllers\Company\TicketTypeController as CompanyTicketTypeContro
 use App\Http\Controllers\Company\WhatsappCtaController as CompanyWhatsappCtaController;
 use App\Http\Controllers\Company\EnquiryController as CompanyEnquiryController;
 use App\Http\Controllers\Support\DashboardController as SupportDashboardController;
+use App\Http\Controllers\Support\EnquiryController as SupportEnquiryController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -68,6 +69,9 @@ Route::middleware(['auth', 'verified', 'role:support_staff'])
     ->name('support.')
     ->group(function () {
         Route::get('/dashboard', [SupportDashboardController::class, 'index'])->name('dashboard');
+
+        Route::get('/enquiries', [SupportEnquiryController::class, 'index'])->name('enquiries.index');
+        Route::patch('/enquiries/{enquiry}/status', [SupportEnquiryController::class, 'updateStatus'])->name('enquiries.update-status');
     });
 
 Route::middleware('auth')->group(function () {
