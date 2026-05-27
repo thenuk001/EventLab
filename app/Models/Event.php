@@ -60,4 +60,19 @@ class Event extends Model
     {
         return $this->hasMany(Enquiry::class);
     }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
+
+    public function qrTickets()
+    {
+        return $this->hasMany(QrTicket::class);
+    }
+
+    public function checkIns()
+    {
+        return $this->hasMany(CheckIn::class);
+    }
 }

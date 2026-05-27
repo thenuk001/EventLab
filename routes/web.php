@@ -12,8 +12,10 @@ use App\Http\Controllers\Company\EventController as CompanyEventController;
 use App\Http\Controllers\Company\TicketTypeController as CompanyTicketTypeController;
 use App\Http\Controllers\Company\WhatsappCtaController as CompanyWhatsappCtaController;
 use App\Http\Controllers\Company\EnquiryController as CompanyEnquiryController;
+use App\Http\Controllers\Company\BookingController as CompanyBookingController;
 use App\Http\Controllers\Support\DashboardController as SupportDashboardController;
 use App\Http\Controllers\Support\EnquiryController as SupportEnquiryController;
+use App\Http\Controllers\Support\CheckInController as SupportCheckInController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -62,6 +64,10 @@ Route::middleware(['auth', 'verified', 'role:company_admin'])
 
         Route::get('/enquiries', [CompanyEnquiryController::class, 'index'])->name('enquiries.index');
         Route::patch('/enquiries/{enquiry}/status', [CompanyEnquiryController::class, 'updateStatus'])->name('enquiries.update-status');
+
+        Route::get('/bookings', [CompanyBookingController::class, 'index'])->name('bookings.index');
+        Route::get('/enquiries/{enquiry}/booking/create', [CompanyBookingController::class, 'createFromEnquiry'])->name('enquiries.booking.create');
+        Route::post('/enquiries/{enquiry}/booking', [CompanyBookingController::class, 'storeFromEnquiry'])->name('enquiries.booking.store');
     });
 
 Route::middleware(['auth', 'verified', 'role:support_staff'])
@@ -72,6 +78,10 @@ Route::middleware(['auth', 'verified', 'role:support_staff'])
 
         Route::get('/enquiries', [SupportEnquiryController::class, 'index'])->name('enquiries.index');
         Route::patch('/enquiries/{enquiry}/status', [SupportEnquiryController::class, 'updateStatus'])->name('enquiries.update-status');
+
+        Route::get('/check-in', [SupportCheckInController::class, 'index'])->name('check-in.index');
+        Route::post('/check-in/search', [SupportCheckInController::class, 'search'])->name('check-in.search');
+        Route::post('/check-in/{qrTicket}/confirm', [SupportCheckInController::class, 'confirm'])->name('check-in.confirm');
     });
 
 Route::middleware('auth')->group(function () {

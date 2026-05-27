@@ -50,6 +50,7 @@
                             <th class="px-6 py-4">Source</th>
                             <th class="px-6 py-4">Status</th>
                             <th class="px-6 py-4">Update</th>
+                            <th class="px-6 py-4">Booking</th>
                         </tr>
                     </thead>
 
@@ -77,9 +78,23 @@
                                 </td>
 
                                 <td class="px-6 py-4">
-                                    <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700">
-                                        {{ ucfirst($enquiry->status) }}
-                                    </span>
+                                    @if($enquiry->status === 'confirmed')
+                                        <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700">
+                                            Confirmed
+                                        </span>
+                                    @elseif($enquiry->status === 'cancelled')
+                                        <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-700">
+                                            Cancelled
+                                        </span>
+                                    @elseif($enquiry->status === 'contacted')
+                                        <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700">
+                                            Contacted
+                                        </span>
+                                    @else
+                                        <span class="rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-orange-700">
+                                            New
+                                        </span>
+                                    @endif
                                 </td>
 
                                 <td class="px-6 py-4">
@@ -101,10 +116,23 @@
                                         </div>
                                     </form>
                                 </td>
+
+                                <td class="px-6 py-4">
+                                    @if($enquiry->booking)
+                                        <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700">
+                                            Booking Created
+                                        </span>
+                                    @else
+                                        <a href="{{ route('company.enquiries.booking.create', $enquiry) }}"
+                                           class="inline-flex rounded-full bg-purple-500 px-4 py-2 text-sm font-bold text-white hover:bg-purple-400">
+                                            Create Booking
+                                        </a>
+                                    @endif
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-10 text-center text-gray-500">
+                                <td colspan="6" class="px-6 py-10 text-center text-gray-500">
                                     No WhatsApp enquiries yet. Click the public WhatsApp button to test.
                                 </td>
                             </tr>
