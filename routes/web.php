@@ -66,6 +66,7 @@ Route::middleware(['auth', 'verified', 'role:company_admin'])
         Route::patch('/enquiries/{enquiry}/status', [CompanyEnquiryController::class, 'updateStatus'])->name('enquiries.update-status');
 
         Route::get('/bookings', [CompanyBookingController::class, 'index'])->name('bookings.index');
+        Route::get('/bookings/{booking}', [CompanyBookingController::class, 'show'])->name('bookings.show');
         Route::get('/enquiries/{enquiry}/booking/create', [CompanyBookingController::class, 'createFromEnquiry'])->name('enquiries.booking.create');
         Route::post('/enquiries/{enquiry}/booking', [CompanyBookingController::class, 'storeFromEnquiry'])->name('enquiries.booking.store');
     });

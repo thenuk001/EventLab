@@ -20,13 +20,6 @@
                 </div>
             @endif
 
-            <div class="mb-8 rounded-3xl bg-gradient-to-r from-slate-900 via-purple-900 to-green-600 p-8 text-white">
-                <h1 class="text-4xl font-black">Confirmed Bookings</h1>
-                <p class="mt-3 text-slate-200">
-                    View confirmed bookings and generated QR ticket codes.
-                </p>
-            </div>
-
             <div class="overflow-hidden rounded-3xl bg-white shadow">
                 <table class="w-full text-left">
                     <thead class="bg-slate-900 text-white">
@@ -42,9 +35,12 @@
 
                     <tbody>
                         @forelse($bookings as $booking)
-                            <tr class="border-b align-top">
+                            <tr class="border-b">
                                 <td class="px-6 py-4">
-                                    <div class="font-black">{{ $booking->booking_code }}</div>
+                                    <a href="{{ route('company.bookings.show', $booking) }}"
+                                       class="font-black text-orange-600 hover:underline">
+                                        {{ $booking->booking_code }}
+                                    </a>
                                     <div class="mt-1 text-sm text-gray-500">
                                         {{ ucfirst($booking->status) }} /
                                         {{ str_replace('_', ' ', ucfirst($booking->payment_status)) }}
@@ -63,15 +59,11 @@
 
                                 <td class="px-6 py-4">
                                     {{ $booking->ticketType?->name }}
-                                    <div class="text-sm text-gray-500">
-                                        Qty: {{ $booking->quantity }}
-                                    </div>
+                                    <div class="text-sm text-gray-500">Qty: {{ $booking->quantity }}</div>
                                 </td>
 
                                 <td class="px-6 py-4">
-                                    <div class="font-black text-orange-600">
-                                        LKR {{ number_format($booking->total_amount, 2) }}
-                                    </div>
+                                    <div class="font-black text-orange-600">LKR {{ number_format($booking->total_amount, 2) }}</div>
                                 </td>
 
                                 <td class="px-6 py-4">
@@ -79,9 +71,7 @@
                                         @foreach($booking->qrTickets as $ticket)
                                             <div class="rounded-xl bg-gray-100 px-3 py-2 text-xs font-bold text-gray-700">
                                                 {{ $ticket->ticket_code }}
-                                                <span class="ml-2 text-gray-400">
-                                                    {{ ucfirst($ticket->status) }}
-                                                </span>
+                                                <span class="ml-2 text-gray-400">{{ ucfirst($ticket->status) }}</span>
                                             </div>
                                         @endforeach
                                     </div>

@@ -23,6 +23,20 @@ class BookingController extends Controller
         return view('company.bookings.index', compact('bookings'));
     }
 
+    public function show(Booking $booking)
+    {
+        abort_unless($booking->company_id === auth()->user()->company_id, 403);
+
+        $booking->load([
+            'event.category',
+            'ticketType',
+            'enquiry',
+            'qrTickets.checkIns.checkedInBy',
+        ]);
+
+        return view('company.bookings.show', compact('booking'));
+    }
+
     public function createFromEnquiry(Enquiry $enquiry)
     {
         abort_unless($enquiry->company_id === auth()->user()->company_id, 403);
