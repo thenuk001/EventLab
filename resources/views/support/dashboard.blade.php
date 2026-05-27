@@ -36,7 +36,37 @@
                 </div>
             </div>
 
-            <div class="grid gap-6 md:grid-cols-3">
+            <div class="grid gap-6 md:grid-cols-4">
+                <div class="rounded-3xl bg-white p-6 shadow">
+                    <p class="text-sm font-bold text-gray-500">New Enquiries</p>
+                    <h3 class="mt-3 text-4xl font-black text-orange-500">
+                        {{ $newEnquiries }}
+                    </h3>
+                </div>
+
+                <div class="rounded-3xl bg-white p-6 shadow">
+                    <p class="text-sm font-bold text-gray-500">Contacted</p>
+                    <h3 class="mt-3 text-4xl font-black text-blue-600">
+                        {{ $contactedEnquiries }}
+                    </h3>
+                </div>
+
+                <div class="rounded-3xl bg-white p-6 shadow">
+                    <p class="text-sm font-bold text-gray-500">Confirmed Bookings</p>
+                    <h3 class="mt-3 text-4xl font-black text-green-600">
+                        {{ $confirmedBookings }}
+                    </h3>
+                </div>
+
+                <div class="rounded-3xl bg-white p-6 shadow">
+                    <p class="text-sm font-bold text-gray-500">QR Check-ins</p>
+                    <h3 class="mt-3 text-4xl font-black text-purple-600">
+                        {{ $qrCheckIns }}
+                    </h3>
+                </div>
+            </div>
+
+            <div class="mt-8 grid gap-6 md:grid-cols-3">
                 <a href="{{ route('support.enquiries.index') }}"
                    class="rounded-3xl bg-white p-6 shadow hover:shadow-lg">
                     <div class="text-3xl">💬</div>
