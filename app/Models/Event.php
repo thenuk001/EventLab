@@ -55,4 +55,9 @@ class Event extends Model
     {
         return $this->hasOne(WhatsappCta::class);
     }
+
+    public function enquiries()
+    {
+        return $this->hasMany(Enquiry::class);
+    }
 }

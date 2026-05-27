@@ -118,21 +118,10 @@
                         $phone = $cta?->booking_number
                             ?? $event->company->whatsapp_number
                             ?? '94771234567';
-
-                        $template = $cta?->template_message
-                            ?? 'Hello EventLab, I would like to book tickets for [Event Name]. Event ID: [Event ID]. Date: [Date]. Ticket Type: [Standard/VIP]. Quantity: [ ]. My name is [ ]. Please confirm availability and payment details.';
-
-                        $message = str_replace(
-                            ['[Event Name]', '[Event ID]', '[Date]'],
-                            [$event->title, $event->event_code, $event->event_date->format('Y-m-d')],
-                            $template
-                        );
-
-                        $waUrl = 'https://wa.me/' . $phone . '?text=' . urlencode($message);
                     @endphp
 
                     <a
-                        href="{{ $waUrl }}"
+                        href="{{ route('events.whatsapp', ['event' => $event, 'source_page' => 'event_detail']) }}"
                         target="_blank"
                         class="mt-6 block rounded-full bg-green-500 px-6 py-4 text-center text-lg font-black hover:bg-green-400"
                     >

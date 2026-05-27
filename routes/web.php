@@ -4,12 +4,14 @@ use App\Http\Controllers\DashboardRedirectController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\EventController;
+use App\Http\Controllers\Public\WhatsappController;
 use App\Http\Controllers\SuperAdmin\DashboardController as SuperDashboardController;
 use App\Http\Controllers\SuperAdmin\EventController as SuperAdminEventController;
 use App\Http\Controllers\Company\DashboardController as CompanyDashboardController;
 use App\Http\Controllers\Company\EventController as CompanyEventController;
 use App\Http\Controllers\Company\TicketTypeController as CompanyTicketTypeController;
 use App\Http\Controllers\Company\WhatsappCtaController as CompanyWhatsappCtaController;
+use App\Http\Controllers\Company\EnquiryController as CompanyEnquiryController;
 use App\Http\Controllers\Support\DashboardController as SupportDashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +19,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/events', [EventController::class, 'index'])->name('events.index');
 Route::get('/events/{event:slug}', [EventController::class, 'show'])->name('events.show');
+Route::get('/events/{event:slug}/whatsapp', [WhatsappController::class, 'redirect'])->name('events.whatsapp');
 
 Route::get('/dashboard', DashboardRedirectController::class)
     ->middleware(['auth', 'verified'])
@@ -55,6 +58,9 @@ Route::middleware(['auth', 'verified', 'role:company_admin'])
 
         Route::get('/events/{event}/whatsapp', [CompanyWhatsappCtaController::class, 'edit'])->name('events.whatsapp.edit');
         Route::put('/events/{event}/whatsapp', [CompanyWhatsappCtaController::class, 'update'])->name('events.whatsapp.update');
+
+        Route::get('/enquiries', [CompanyEnquiryController::class, 'index'])->name('enquiries.index');
+        Route::patch('/enquiries/{enquiry}/status', [CompanyEnquiryController::class, 'updateStatus'])->name('enquiries.update-status');
     });
 
 Route::middleware(['auth', 'verified', 'role:support_staff'])

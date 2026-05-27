@@ -29,6 +29,11 @@
                            class="rounded-full bg-orange-500 px-6 py-3 text-sm font-black text-white hover:bg-orange-400">
                             Create Event
                         </a>
+
+                        <a href="{{ route('company.enquiries.index') }}"
+                           class="rounded-full bg-green-500 px-6 py-3 text-sm font-black text-white hover:bg-green-400">
+                            View Enquiries
+                        </a>
                     </div>
                 </div>
             </div>
@@ -55,7 +60,7 @@
                 </div>
             </div>
 
-            <div class="mt-8 grid gap-6 md:grid-cols-3">
+            <div class="mt-8 grid gap-6 md:grid-cols-4">
                 <a href="{{ route('company.events.index') }}"
                    class="rounded-3xl bg-white p-6 shadow hover:shadow-lg">
                     <h3 class="text-xl font-black">Event Management</h3>
@@ -64,19 +69,27 @@
                     </p>
                 </a>
 
-                <a href="#"
+                <a href="{{ route('company.events.index') }}"
                    class="rounded-3xl bg-white p-6 shadow hover:shadow-lg">
                     <h3 class="text-xl font-black">Ticket Types</h3>
                     <p class="mt-2 text-sm text-gray-500">
-                        Manage Standard, VIP, Zone, Balcony, and other ticket types.
+                        Manage Standard, VIP, Zone, Balcony, and other ticket types from each event.
                     </p>
                 </a>
 
-                <a href="#"
+                <a href="{{ route('company.events.index') }}"
                    class="rounded-3xl bg-white p-6 shadow hover:shadow-lg">
                     <h3 class="text-xl font-black">WhatsApp Settings</h3>
                     <p class="mt-2 text-sm text-gray-500">
-                        Set booking numbers and message templates.
+                        Set booking numbers and message templates from each event.
+                    </p>
+                </a>
+
+                <a href="{{ route('company.enquiries.index') }}"
+                   class="rounded-3xl bg-white p-6 shadow hover:shadow-lg">
+                    <h3 class="text-xl font-black">WhatsApp Enquiries</h3>
+                    <p class="mt-2 text-sm text-gray-500">
+                        View WhatsApp clicks and booking interest from public users.
                     </p>
                 </a>
             </div>
