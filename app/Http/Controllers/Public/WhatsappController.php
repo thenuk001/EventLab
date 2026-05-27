@@ -32,9 +32,8 @@ class WhatsappController extends Controller
 
         $cta = $event->whatsappCta;
 
-        $phone = $cta?->booking_number
-            ?? $event->company->whatsapp_number
-            ?? '94771234567';
+        // All customer bookings go to the official EventLab WhatsApp number.
+        $phone = config('services.eventlab.whatsapp_number');
 
         $template = $cta?->template_message
             ?? 'Hello EventLab, I would like to book tickets for [Event Name]. Event ID: [Event ID]. Date: [Date]. Ticket Type: [Standard/VIP]. Quantity: [ ]. My name is [ ]. Please confirm availability and payment details.';

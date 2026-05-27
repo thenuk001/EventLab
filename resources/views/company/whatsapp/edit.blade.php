@@ -26,9 +26,10 @@
             @endif
 
             <div class="mb-8 rounded-3xl bg-gradient-to-r from-slate-900 via-green-800 to-orange-500 p-8 text-white">
-                <h1 class="text-4xl font-black">WhatsApp Booking Setup</h1>
+                <h1 class="text-4xl font-black">WhatsApp Booking Message</h1>
                 <p class="mt-3 text-slate-100">
-                    Configure the WhatsApp button, phone number, and pre-filled booking message for this event.
+                    Configure the button label and pre-filled WhatsApp message for this event.
+                    All customers will be redirected to the official EventLab WhatsApp number.
                 </p>
             </div>
 
@@ -40,41 +41,18 @@
                     @method('PUT')
 
                     <div class="grid gap-6">
-                        <div>
-                            <label class="mb-2 block text-sm font-bold text-gray-700">
-                                Booking WhatsApp Number
-                            </label>
-
-                            <input type="text"
-                                   name="booking_number"
-                                   value="{{ old('booking_number', $whatsappCta?->booking_number ?? $event->company?->whatsapp_number) }}"
-                                   placeholder="94771234567"
-                                   class="w-full rounded-2xl border-gray-300"
-                                   required>
-
-                            <p class="mt-2 text-sm text-gray-500">
-                                Use international format without + sign. Example: 94771234567
+                        <div class="rounded-2xl bg-green-50 p-5">
+                            <p class="text-sm font-bold text-green-700">
+                                Official EventLab Booking Number
                             </p>
 
-                            @error('booking_number')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
+                            <p class="mt-2 text-2xl font-black text-green-900">
+                                {{ $eventlabWhatsappNumber }}
+                            </p>
 
-                        <div>
-                            <label class="mb-2 block text-sm font-bold text-gray-700">
-                                Support WhatsApp Number
-                            </label>
-
-                            <input type="text"
-                                   name="support_number"
-                                   value="{{ old('support_number', $whatsappCta?->support_number ?? $event->company?->whatsapp_number) }}"
-                                   placeholder="94771234567"
-                                   class="w-full rounded-2xl border-gray-300">
-
-                            @error('support_number')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                            <p class="mt-2 text-sm text-green-700">
+                                This number is controlled by EventLab. Company admins cannot change it.
+                            </p>
                         </div>
 
                         <div>
@@ -122,14 +100,14 @@
                             </a>
 
                             <button class="rounded-full bg-green-500 px-8 py-3 font-black text-white hover:bg-green-400">
-                                Save WhatsApp Settings
+                                Save Message Settings
                             </button>
                         </div>
                     </div>
                 </form>
 
                 @php
-                    $previewPhone = old('booking_number', $whatsappCta?->booking_number ?? $event->company?->whatsapp_number ?? '94771234567');
+                    $previewPhone = $eventlabWhatsappNumber;
 
                     $previewTemplate = old('template_message', $whatsappCta?->template_message ?? 'Hello EventLab, I would like to book tickets for [Event Name]. Event ID: [Event ID]. Date: [Date]. Ticket Type: [Standard/VIP]. Quantity: [ ]. My name is [ ]. Please confirm availability and payment details.');
 
@@ -152,7 +130,7 @@
                     </h3>
 
                     <div class="mt-6 rounded-2xl bg-white/10 p-5">
-                        <p class="text-sm text-slate-400">Phone</p>
+                        <p class="text-sm text-slate-400">EventLab Number</p>
                         <p class="mt-1 font-black text-green-300">{{ $previewPhone }}</p>
                     </div>
 

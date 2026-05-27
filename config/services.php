@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'eventlab' => [
+        'whatsapp_number' => env('EVENTLAB_WHATSAPP_NUMBER', '94779885055'),
+    ],
+
 ];
