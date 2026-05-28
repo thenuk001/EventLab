@@ -20,75 +20,140 @@
                 </div>
             @endif
 
-            <div class="overflow-hidden rounded-3xl bg-white shadow">
-                <table class="w-full text-left">
-                    <thead class="bg-slate-900 text-white">
-                        <tr>
-                            <th class="px-6 py-4">Event</th>
-                            <th class="px-6 py-4">Category</th>
-                            <th class="px-6 py-4">Date</th>
-                            <th class="px-6 py-4">Status</th>
-                            <th class="px-6 py-4">Approval</th>
-                            <th class="px-6 py-4">Actions</th>
-                        </tr>
-                    </thead>
+            <div class="mb-8 rounded-3xl bg-gradient-to-r from-slate-900 via-blue-900 to-green-600 p-8 text-white shadow-xl">
+                <h1 class="text-4xl font-black">My Company Events</h1>
+                <p class="mt-3 text-slate-200">
+                    Manage your events, tickets, WhatsApp message settings, and view Super Admin approval feedback.
+                </p>
+            </div>
 
-                    <tbody>
-                        @forelse($events as $event)
-                            <tr class="border-b">
-                                <td class="px-6 py-4">
-                                    <div class="font-black">{{ $event->title }}</div>
-                                    <div class="text-sm text-gray-500">{{ $event->event_code }}</div>
-                                </td>
+            <div class="space-y-6">
+                @forelse($events as $event)
+                    <div class="rounded-3xl bg-white p-6 shadow">
+                        <div class="grid gap-6 lg:grid-cols-12">
+                            <div class="lg:col-span-4">
+                                <p class="text-sm font-bold text-gray-500">Event</p>
 
-                                <td class="px-6 py-4">
-                                    {{ $event->category->name }}
-                                </td>
+                                <h3 class="mt-1 text-xl font-black">
+                                    {{ $event->title }}
+                                </h3>
 
-                                <td class="px-6 py-4">
-                                    {{ $event->event_date->format('M d, Y') }}
-                                </td>
+                                <p class="mt-1 text-sm text-gray-500">
+                                    {{ $event->event_code }}
+                                </p>
 
-                                <td class="px-6 py-4">
-                                    <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700">
-                                        {{ ucfirst($event->status) }}
+                                @if($event->approval_status === 'approved' && $event->status === 'published')
+                                    <a href="{{ route('events.show', $event) }}"
+                                       target="_blank"
+                                       class="mt-3 inline-block text-sm font-bold text-orange-600 hover:underline">
+                                        View Public Page
+                                    </a>
+                                @endif
+                            </div>
+
+                            <div class="lg:col-span-2">
+                                <p class="text-sm font-bold text-gray-500">Category</p>
+                                <p class="mt-1 font-bold">
+                                    {{ $event->category?->name ?? 'No category' }}
+                                </p>
+                            </div>
+
+                            <div class="lg:col-span-2">
+                                <p class="text-sm font-bold text-gray-500">Date</p>
+                                <p class="mt-1 font-bold">
+                                    {{ $event->event_date?->format('M d, Y') }}
+                                </p>
+                            </div>
+
+                            <div class="lg:col-span-2">
+                                <p class="text-sm font-bold text-gray-500">Status</p>
+                                <span class="mt-2 inline-flex rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700">
+                                    {{ ucfirst($event->status) }}
+                                </span>
+                            </div>
+
+                            <div class="lg:col-span-2">
+                                <p class="text-sm font-bold text-gray-500">Approval</p>
+
+                                @if($event->approval_status === 'approved')
+                                    <span class="mt-2 inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700">
+                                        Approved
                                     </span>
-                                </td>
-
-                                <td class="px-6 py-4">
-                                    <span class="rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-orange-700">
-                                        {{ ucfirst($event->approval_status) }}
+                                @elseif($event->approval_status === 'rejected')
+                                    <span class="mt-2 inline-flex rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-700">
+                                        Rejected
                                     </span>
-                                </td>
+                                @else
+                                    <span class="mt-2 inline-flex rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-orange-700">
+                                        Pending
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
 
-                                <td class="px-6 py-4">
-                                    <div class="flex flex-col gap-2">
-                                        <a href="{{ route('company.events.edit', $event) }}"
-                                           class="font-bold text-orange-600">
-                                            Edit
-                                        </a>
+                        @if($event->approval_comment)
+                            <div class="mt-6 rounded-2xl
+                                @if($event->approval_status === 'approved') bg-green-50 border border-green-100
+                                @elseif($event->approval_status === 'rejected') bg-red-50 border border-red-100
+                                @else bg-orange-50 border border-orange-100
+                                @endif
+                                p-5">
+                                <p class="text-sm font-black
+                                    @if($event->approval_status === 'approved') text-green-800
+                                    @elseif($event->approval_status === 'rejected') text-red-800
+                                    @else text-orange-800
+                                    @endif">
+                                    Super Admin Comment
+                                </p>
 
-                                        <a href="{{ route('company.events.tickets.index', $event) }}"
-                                           class="font-bold text-green-600">
-                                            Tickets
-                                        </a>
+                                <p class="mt-2 text-sm leading-6 text-gray-700">
+                                    {{ $event->approval_comment }}
+                                </p>
 
-                                        <a href="{{ route('company.events.whatsapp.edit', $event) }}"
-                                           class="font-bold text-blue-600">
-                                            WhatsApp
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" class="px-6 py-10 text-center text-gray-500">
-                                    No events yet. Create your first event.
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                                <p class="mt-3 text-xs font-bold text-gray-500">
+                                    @if($event->approved_at)
+                                        Approved on {{ $event->approved_at->format('M d, Y h:i A') }}
+                                    @elseif($event->rejected_at)
+                                        Rejected on {{ $event->rejected_at->format('M d, Y h:i A') }}
+                                    @else
+                                        Waiting for final decision
+                                    @endif
+                                </p>
+                            </div>
+                        @else
+                            <div class="mt-6 rounded-2xl border border-orange-100 bg-orange-50 p-5">
+                                <p class="text-sm font-black text-orange-800">
+                                    Approval Feedback
+                                </p>
+
+                                <p class="mt-2 text-sm text-gray-600">
+                                    No comment yet. This event is waiting for Super Admin review.
+                                </p>
+                            </div>
+                        @endif
+
+                        <div class="mt-6 flex flex-wrap gap-3">
+                            <a href="{{ route('company.events.edit', $event) }}"
+                               class="rounded-full bg-orange-500 px-5 py-2 text-sm font-bold text-white hover:bg-orange-400">
+                                Edit
+                            </a>
+
+                            <a href="{{ route('company.events.tickets.index', $event) }}"
+                               class="rounded-full bg-green-500 px-5 py-2 text-sm font-bold text-white hover:bg-green-400">
+                                Tickets
+                            </a>
+
+                            <a href="{{ route('company.events.whatsapp.edit', $event) }}"
+                               class="rounded-full bg-blue-500 px-5 py-2 text-sm font-bold text-white hover:bg-blue-400">
+                                WhatsApp
+                            </a>
+                        </div>
+                    </div>
+                @empty
+                    <div class="rounded-3xl bg-white p-10 text-center text-gray-500 shadow">
+                        No events yet. Create your first event.
+                    </div>
+                @endforelse
             </div>
 
             <div class="mt-6">
