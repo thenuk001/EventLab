@@ -1,226 +1,272 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h2 class="text-xl font-semibold text-gray-800">
+                <p class="text-sm font-black uppercase tracking-[0.25em] text-orange-500">
+                    EventLab Booking Center
+                </p>
+
+                <h2 class="mt-1 text-2xl font-black text-slate-900">
                     Booking Details
                 </h2>
-                <p class="mt-1 text-sm text-gray-500">
-                    {{ $booking->booking_code }}
-                </p>
             </div>
 
             <a href="{{ route('company.bookings.index') }}"
-               class="rounded-full bg-gray-100 px-5 py-2 text-sm font-bold text-gray-700">
+               class="rounded-full bg-slate-100 px-5 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-200">
                 Back to Bookings
             </a>
         </div>
     </x-slot>
 
-    <div class="py-10">
+    <div class="min-h-screen bg-slate-100 py-10">
         <div class="mx-auto max-w-7xl px-4">
-            <div class="mb-8 rounded-3xl bg-gradient-to-r from-slate-900 via-purple-900 to-green-600 p-8 text-white">
-                <div class="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-                    <div>
-                        <p class="text-sm font-black uppercase tracking-widest text-green-300">
-                            Confirmed Booking
-                        </p>
 
-                        <h1 class="mt-2 text-4xl font-black">
-                            {{ $booking->booking_code }}
+            <!-- Hero Section -->
+            <div class="relative mb-8 overflow-hidden rounded-[2rem] bg-slate-950 p-8 text-white shadow-2xl md:p-10">
+                <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-blue-950 to-green-600"></div>
+                <div class="absolute -left-16 top-10 h-72 w-72 rounded-full bg-blue-500/30 blur-3xl"></div>
+                <div class="absolute right-10 bottom-0 h-72 w-72 rounded-full bg-orange-500/25 blur-3xl"></div>
+                <div class="absolute right-40 top-10 h-72 w-72 rounded-full bg-green-500/20 blur-3xl"></div>
+
+                <div class="relative z-10 grid gap-8 lg:grid-cols-3 lg:items-center">
+                    <div class="lg:col-span-2">
+                        <div class="mb-5 inline-flex rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-bold text-green-200">
+                            Booking Code: {{ $booking->booking_code }}
+                        </div>
+
+                        <h1 class="text-4xl font-black leading-tight md:text-5xl">
+                            {{ $booking->customer_name }}
                         </h1>
 
-                        <p class="mt-3 text-slate-200">
-                            {{ $booking->event?->title }} • {{ $booking->event?->event_code }}
+                        <p class="mt-5 max-w-3xl text-base leading-8 text-slate-300">
+                            Booking for
+                            <span class="font-black text-white">{{ $booking->event?->title ?? 'Event' }}</span>
+                            with generated QR tickets ready for support check-in validation.
                         </p>
+
+                        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+                            <a href="{{ route('company.bookings.index') }}"
+                               class="rounded-full bg-white px-7 py-3 text-center text-sm font-black text-slate-950 hover:bg-slate-100">
+                                Back to Bookings
+                            </a>
+
+                            <a href="{{ route('company.enquiries.index') }}"
+                               class="rounded-full bg-green-500 px-7 py-3 text-center text-sm font-black text-white hover:bg-green-400">
+                                View Enquiries
+                            </a>
+                        </div>
                     </div>
 
-                    <div class="rounded-2xl bg-white/10 p-5">
-                        <p class="text-sm text-slate-300">Total Amount</p>
-                        <p class="mt-1 text-3xl font-black text-orange-300">
-                            LKR {{ number_format($booking->total_amount, 2) }}
+                    <div class="rounded-[1.5rem] border border-white/10 bg-white/10 p-6 backdrop-blur">
+                        <p class="text-sm font-black uppercase tracking-[0.2em] text-orange-300">
+                            Booking Summary
                         </p>
+
+                        <div class="mt-5 grid grid-cols-2 gap-3">
+                            <div class="rounded-2xl bg-white/10 p-4">
+                                <p class="text-xs font-bold text-slate-300">Quantity</p>
+                                <p class="mt-1 text-2xl font-black">{{ $booking->quantity }}</p>
+                            </div>
+
+                            <div class="rounded-2xl bg-white/10 p-4">
+                                <p class="text-xs font-bold text-slate-300">Tickets</p>
+                                <p class="mt-1 text-2xl font-black">{{ $booking->qrTickets->count() }}</p>
+                            </div>
+
+                            <div class="rounded-2xl bg-white/10 p-4 col-span-2">
+                                <p class="text-xs font-bold text-slate-300">Total Amount</p>
+                                <p class="mt-1 text-2xl font-black">
+                                    LKR {{ number_format($booking->total_amount, 2) }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="mt-5 flex flex-wrap gap-2">
+                            <span class="rounded-full bg-green-500/20 px-3 py-1 text-xs font-black text-green-200">
+                                {{ ucfirst($booking->status) }}
+                            </span>
+
+                            <span class="rounded-full bg-orange-500/20 px-3 py-1 text-xs font-black text-orange-200">
+                                {{ ucfirst(str_replace('_', ' ', $booking->payment_status)) }}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Main Grid -->
             <div class="grid gap-8 lg:grid-cols-3">
-                <div class="space-y-8 lg:col-span-2">
-                    <div class="rounded-3xl bg-white p-8 shadow">
-                        <h3 class="text-2xl font-black">Customer Details</h3>
+                <!-- Booking Information -->
+                <div class="lg:col-span-1">
+                    <div class="rounded-[2rem] bg-white p-6 shadow md:p-8">
+                        <div class="flex items-start justify-between gap-4">
+                            <div>
+                                <p class="text-sm font-black uppercase tracking-[0.2em] text-blue-500">
+                                    Customer Info
+                                </p>
 
-                        <div class="mt-6 grid gap-5 md:grid-cols-2">
-                            <div class="rounded-2xl bg-gray-50 p-5">
-                                <p class="text-sm font-bold text-gray-500">Name</p>
-                                <p class="mt-1 text-lg font-black">
-                                    {{ $booking->customer_name ?? 'Not provided' }}
+                                <h3 class="mt-2 text-2xl font-black text-slate-950">
+                                    Booking Information
+                                </h3>
+                            </div>
+
+                            <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-100 text-3xl">
+                                🧾
+                            </div>
+                        </div>
+
+                        <div class="mt-6 space-y-4">
+                            <div class="rounded-2xl bg-slate-50 p-4">
+                                <p class="text-xs font-bold uppercase tracking-widest text-slate-400">
+                                    Customer Name
+                                </p>
+                                <p class="mt-1 font-black text-slate-900">
+                                    {{ $booking->customer_name }}
                                 </p>
                             </div>
 
-                            <div class="rounded-2xl bg-gray-50 p-5">
-                                <p class="text-sm font-bold text-gray-500">Phone</p>
-                                <p class="mt-1 text-lg font-black">
-                                    {{ $booking->customer_phone ?? 'Not provided' }}
+                            <div class="rounded-2xl bg-slate-50 p-4">
+                                <p class="text-xs font-bold uppercase tracking-widest text-slate-400">
+                                    Phone
+                                </p>
+                                <p class="mt-1 font-black text-slate-900">
+                                    {{ $booking->customer_phone ?? '-' }}
                                 </p>
                             </div>
 
-                            <div class="rounded-2xl bg-gray-50 p-5">
-                                <p class="text-sm font-bold text-gray-500">Email</p>
-                                <p class="mt-1 text-lg font-black">
-                                    {{ $booking->customer_email ?? 'Not provided' }}
+                            <div class="rounded-2xl bg-slate-50 p-4">
+                                <p class="text-xs font-bold uppercase tracking-widest text-slate-400">
+                                    Email
+                                </p>
+                                <p class="mt-1 font-black text-slate-900">
+                                    {{ $booking->customer_email ?? '-' }}
                                 </p>
                             </div>
 
-                            <div class="rounded-2xl bg-gray-50 p-5">
-                                <p class="text-sm font-bold text-gray-500">Quantity</p>
-                                <p class="mt-1 text-lg font-black">
-                                    {{ $booking->quantity }}
+                            <div class="rounded-2xl bg-slate-50 p-4">
+                                <p class="text-xs font-bold uppercase tracking-widest text-slate-400">
+                                    Event
+                                </p>
+                                <p class="mt-1 font-black text-slate-900">
+                                    {{ $booking->event?->title ?? '-' }}
+                                </p>
+                            </div>
+
+                            <div class="rounded-2xl bg-slate-50 p-4">
+                                <p class="text-xs font-bold uppercase tracking-widest text-slate-400">
+                                    Ticket Type
+                                </p>
+                                <p class="mt-1 font-black text-slate-900">
+                                    {{ $booking->ticketType?->name ?? '-' }}
+                                </p>
+                            </div>
+
+                            <div class="rounded-2xl bg-slate-50 p-4">
+                                <p class="text-xs font-bold uppercase tracking-widest text-slate-400">
+                                    Notes
+                                </p>
+                                <p class="mt-1 text-sm leading-6 text-slate-600">
+                                    {{ $booking->notes ?? 'No notes added.' }}
                                 </p>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="rounded-3xl bg-white p-8 shadow">
-                        <h3 class="text-2xl font-black">QR Tickets</h3>
+                <!-- QR Tickets -->
+                <div class="lg:col-span-2">
+                    <div class="rounded-[2rem] bg-white p-6 shadow md:p-8">
+                        <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                            <div>
+                                <p class="text-sm font-black uppercase tracking-[0.2em] text-green-500">
+                                    QR Tickets
+                                </p>
 
-                        <div class="mt-6 grid gap-4 md:grid-cols-2">
-                            @foreach($booking->qrTickets as $ticket)
-                                <div class="rounded-2xl border border-gray-100 bg-gray-50 p-5">
+                                <h3 class="mt-2 text-2xl font-black text-slate-950">
+                                    Generated Ticket QR Codes
+                                </h3>
+
+                                <p class="mt-2 text-sm leading-6 text-slate-500">
+                                    Each ticket has a unique QR code. Support staff can scan these codes at the event entrance.
+                                </p>
+                            </div>
+
+                            <span class="rounded-full bg-green-100 px-4 py-2 text-sm font-black text-green-700">
+                                {{ $booking->qrTickets->count() }} Ticket(s)
+                            </span>
+                        </div>
+
+                        <div class="grid gap-6 md:grid-cols-2">
+                            @forelse($booking->qrTickets as $ticket)
+                                <div class="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5">
                                     <div class="flex items-start justify-between gap-4">
                                         <div>
-                                            <p class="text-sm font-bold text-gray-500">Ticket Code</p>
-                                            <p class="mt-1 text-xl font-black text-slate-900">
+                                            <p class="text-xs font-black uppercase tracking-widest text-slate-400">
+                                                Ticket Holder
+                                            </p>
+
+                                            <h4 class="mt-1 text-xl font-black text-slate-950">
+                                                {{ $ticket->holder_name }}
+                                            </h4>
+
+                                            <p class="mt-2 text-sm font-bold text-slate-500">
                                                 {{ $ticket->ticket_code }}
                                             </p>
                                         </div>
 
-                                        @if($ticket->status === 'checked_in')
-                                            <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700">
+                                        @if($ticket->checked_in_at)
+                                            <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-black text-green-700">
                                                 Checked In
                                             </span>
-                                        @elseif($ticket->status === 'cancelled')
-                                            <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-700">
-                                                Cancelled
-                                            </span>
                                         @else
-                                            <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700">
-                                                Valid
+                                            <span class="rounded-full bg-orange-100 px-3 py-1 text-xs font-black text-orange-700">
+                                                Not Used
                                             </span>
                                         @endif
                                     </div>
 
-                                    <div class="mt-4 rounded-xl bg-white p-4">
-                                        <p class="text-sm font-bold text-gray-500">Holder</p>
-                                        <p class="mt-1 font-black">
-                                            {{ $ticket->holder_name ?? $booking->customer_name }}
-                                        </p>
+                                    <div class="mt-5 flex justify-center rounded-2xl bg-white p-5 shadow-sm">
+                                        {!! \SimpleSoftwareIO\QrCode\Facades\QrCode::size(190)->generate($ticket->ticket_code) !!}
                                     </div>
 
-                                    @if($ticket->checked_in_at)
-                                        <div class="mt-4 rounded-xl bg-blue-50 p-4">
-                                            <p class="text-sm font-bold text-blue-700">Checked In At</p>
-                                            <p class="mt-1 font-black text-blue-900">
-                                                {{ $ticket->checked_in_at->format('M d, Y h:i A') }}
-                                            </p>
-                                        </div>
-                                    @endif
+                                    <div class="mt-5 rounded-2xl bg-white p-4">
+                                        <p class="text-xs font-bold uppercase tracking-widest text-slate-400">
+                                            Status
+                                        </p>
 
-                                    @if($ticket->checkIns->count())
-                                        <div class="mt-4 text-sm text-gray-500">
-                                            Checked by:
-                                            <span class="font-bold">
-                                                {{ $ticket->checkIns->first()?->checkedInBy?->name ?? 'Support Staff' }}
-                                            </span>
-                                        </div>
-                                    @endif
+                                        @if($ticket->checked_in_at)
+                                            <p class="mt-2 text-sm font-black text-green-600">
+                                                Checked in at {{ $ticket->checked_in_at->format('M d, Y h:i A') }}
+                                            </p>
+
+                                            @if($ticket->checkedInBy)
+                                                <p class="mt-1 text-xs text-slate-500">
+                                                    By {{ $ticket->checkedInBy->name }}
+                                                </p>
+                                            @endif
+                                        @else
+                                            <p class="mt-2 text-sm font-black text-orange-500">
+                                                Ready for QR scan validation
+                                            </p>
+                                        @endif
+                                    </div>
                                 </div>
-                            @endforeach
+                            @empty
+                                <div class="rounded-3xl bg-slate-50 p-10 text-center md:col-span-2">
+                                    <div class="text-5xl">🎟️</div>
+                                    <h3 class="mt-4 text-xl font-black text-slate-900">
+                                        No QR tickets found
+                                    </h3>
+                                    <p class="mt-2 text-sm text-slate-500">
+                                        QR tickets will appear here after booking creation.
+                                    </p>
+                                </div>
+                            @endforelse
                         </div>
                     </div>
                 </div>
-
-                <aside class="space-y-8">
-                    <div class="rounded-3xl bg-white p-6 shadow">
-                        <h3 class="text-xl font-black">Event Details</h3>
-
-                        <div class="mt-5 space-y-4">
-                            <div>
-                                <p class="text-sm font-bold text-gray-500">Event</p>
-                                <p class="mt-1 font-black">{{ $booking->event?->title }}</p>
-                            </div>
-
-                            <div>
-                                <p class="text-sm font-bold text-gray-500">Category</p>
-                                <p class="mt-1 font-black">{{ $booking->event?->category?->name ?? 'N/A' }}</p>
-                            </div>
-
-                            <div>
-                                <p class="text-sm font-bold text-gray-500">Date</p>
-                                <p class="mt-1 font-black">
-                                    {{ $booking->event?->event_date?->format('M d, Y') }}
-                                </p>
-                            </div>
-
-                            <div>
-                                <p class="text-sm font-bold text-gray-500">Venue</p>
-                                <p class="mt-1 font-black">
-                                    {{ $booking->event?->venue }} • {{ $booking->event?->city }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="rounded-3xl bg-white p-6 shadow">
-                        <h3 class="text-xl font-black">Payment & Ticket</h3>
-
-                        <div class="mt-5 space-y-4">
-                            <div>
-                                <p class="text-sm font-bold text-gray-500">Ticket Type</p>
-                                <p class="mt-1 font-black">{{ $booking->ticketType?->name ?? 'N/A' }}</p>
-                            </div>
-
-                            <div>
-                                <p class="text-sm font-bold text-gray-500">Unit Price</p>
-                                <p class="mt-1 font-black">
-                                    LKR {{ number_format($booking->unit_price, 2) }}
-                                </p>
-                            </div>
-
-                            <div>
-                                <p class="text-sm font-bold text-gray-500">Payment Status</p>
-
-                                @if($booking->payment_status === 'paid')
-                                    <span class="mt-2 inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700">
-                                        Paid
-                                    </span>
-                                @elseif($booking->payment_status === 'manual_pending')
-                                    <span class="mt-2 inline-flex rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-orange-700">
-                                        Manual Pending
-                                    </span>
-                                @else
-                                    <span class="mt-2 inline-flex rounded-full bg-gray-100 px-3 py-1 text-xs font-bold text-gray-700">
-                                        {{ str_replace('_', ' ', ucfirst($booking->payment_status)) }}
-                                    </span>
-                                @endif
-                            </div>
-
-                            <div>
-                                <p class="text-sm font-bold text-gray-500">Booking Status</p>
-                                <p class="mt-1 font-black">{{ ucfirst($booking->status) }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    @if($booking->notes)
-                        <div class="rounded-3xl bg-white p-6 shadow">
-                            <h3 class="text-xl font-black">Notes</h3>
-                            <p class="mt-3 leading-6 text-gray-600">
-                                {{ $booking->notes }}
-                            </p>
-                        </div>
-                    @endif
-                </aside>
             </div>
+
         </div>
     </div>
 </x-app-layout>

@@ -14,6 +14,7 @@ class QrTicket extends Model
         'holder_name',
         'status',
         'checked_in_at',
+        'checked_in_by',
     ];
 
     protected function casts(): array
@@ -41,5 +42,15 @@ class QrTicket extends Model
     public function checkIns()
     {
         return $this->hasMany(CheckIn::class);
+    }
+
+    public function checkedInBy()
+    {
+        return $this->belongsTo(User::class, 'checked_in_by');
+    }
+
+    public function isCheckedIn(): bool
+    {
+        return ! is_null($this->checked_in_at);
     }
 }
