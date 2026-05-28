@@ -7,6 +7,7 @@ use App\Http\Controllers\Public\EventController;
 use App\Http\Controllers\Public\WhatsappController;
 use App\Http\Controllers\SuperAdmin\DashboardController as SuperDashboardController;
 use App\Http\Controllers\SuperAdmin\EventController as SuperAdminEventController;
+use App\Http\Controllers\SuperAdmin\UserController as SuperAdminUserController;
 use App\Http\Controllers\Company\DashboardController as CompanyDashboardController;
 use App\Http\Controllers\Company\EventController as CompanyEventController;
 use App\Http\Controllers\Company\TicketTypeController as CompanyTicketTypeController;
@@ -38,6 +39,16 @@ Route::middleware(['auth', 'verified', 'role:super_admin'])
         Route::patch('/events/{event}/approve', [SuperAdminEventController::class, 'approve'])->name('events.approve');
         Route::patch('/events/{event}/reject', [SuperAdminEventController::class, 'reject'])->name('events.reject');
         Route::patch('/events/{event}/toggle-featured', [SuperAdminEventController::class, 'toggleFeatured'])->name('events.toggle-featured');
+
+        Route::get('/users', [SuperAdminUserController::class, 'index'])->name('users.index');
+        Route::get('/users/create', [SuperAdminUserController::class, 'create'])->name('users.create');
+        Route::post('/users', [SuperAdminUserController::class, 'store'])->name('users.store');
+        Route::get('/users/{user}/edit', [SuperAdminUserController::class, 'edit'])->name('users.edit');
+        Route::put('/users/{user}', [SuperAdminUserController::class, 'update'])->name('users.update');
+        Route::patch('/users/{user}/activate', [SuperAdminUserController::class, 'activate'])->name('users.activate');
+        Route::patch('/users/{user}/deactivate', [SuperAdminUserController::class, 'deactivate'])->name('users.deactivate');
+        Route::patch('/users/{user}/block', [SuperAdminUserController::class, 'block'])->name('users.block');
+        Route::patch('/users/{user}/reset-password', [SuperAdminUserController::class, 'resetPassword'])->name('users.reset-password');
     });
 
 Route::middleware(['auth', 'verified', 'role:company_admin'])
