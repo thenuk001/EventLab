@@ -11,10 +11,7 @@ class EventController extends Controller
 {
     public function index(Request $request)
     {
-        $events = Event::with(['company', 'category'])
-            ->when($request->approval_status, function ($query, $status) {
-                $query->where('approval_status', $status);
-            })
+        $events = Event::with(['company', 'category', 'approvedBy'])
             ->when($request->search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('title', 'ILIKE', "%{$search}%")
@@ -24,30 +21,48 @@ class EventController extends Controller
                         });
                 });
             })
+            ->when($request->approval_status, function ($query, $status) {
+                $query->where('approval_status', $status);
+            })
             ->latest()
-            ->paginate(10)
+            ->paginate(15)
             ->withQueryString();
 
         return view('super-admin.events.index', compact('events'));
     }
 
-    public function approve(Event $event): RedirectResponse
+    public function approve(Request $request, Event $event): RedirectResponse
     {
+        $validated = $request->validate([
+            'approval_comment' => ['nullable', 'string', 'max:1000'],
+        ]);
+
         $event->update([
             'approval_status' => 'approved',
-            'status' => 'published',
+            'approval_comment' => $validated['approval_comment'] ?? 'Approved by Super Admin.',
+            'approved_by' => auth()->id(),
+            'approved_at' => now(),
+            'rejected_at' => null,
         ]);
 
         return back()->with('success', 'Event approved successfully.');
     }
 
-    public function reject(Event $event): RedirectResponse
+    public function reject(Request $request, Event $event): RedirectResponse
     {
-        $event->update([
-            'approval_status' => 'rejected',
+        $validated = $request->validate([
+            'approval_comment' => ['required', 'string', 'max:1000'],
         ]);
 
-        return back()->with('success', 'Event rejected successfully.');
+        $event->update([
+            'approval_status' => 'rejected',
+            'approval_comment' => $validated['approval_comment'],
+            'approved_by' => auth()->id(),
+            'approved_at' => null,
+            'rejected_at' => now(),
+        ]);
+
+        return back()->with('success', 'Event rejected with comment.');
     }
 
     public function toggleFeatured(Event $event): RedirectResponse
@@ -56,6 +71,6 @@ class EventController extends Controller
             'is_featured' => ! $event->is_featured,
         ]);
 
-        return back()->with('success', 'Featured status updated successfully.');
+        return back()->with('success', 'Featured status updated.');
     }
 }
