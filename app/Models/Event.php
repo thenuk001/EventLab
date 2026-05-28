@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Event extends Model
 {
@@ -23,6 +24,10 @@ class Event extends Model
         'banner',
         'status',
         'approval_status',
+        'approval_comment',
+        'approved_by',
+        'approved_at',
+        'rejected_at',
         'is_featured',
         'views_count',
         'whatsapp_clicks_count',
@@ -33,15 +38,18 @@ class Event extends Model
         return [
             'event_date' => 'date',
             'is_featured' => 'boolean',
+            'approved_at' => 'datetime',
+            'rejected_at' => 'datetime',
         ];
     }
 
-    public function company()
+    // Relationships
+    public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
     }
 
-    public function category()
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
@@ -74,5 +82,10 @@ class Event extends Model
     public function checkIns()
     {
         return $this->hasMany(CheckIn::class);
+    }
+
+    public function approvedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved_by');
     }
 }

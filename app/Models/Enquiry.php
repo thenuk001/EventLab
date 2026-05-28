@@ -40,4 +40,9 @@ class Enquiry extends Model
     {
         return $this->belongsTo(TicketType::class);
     }
+
+    public function booking()
+    {
+        return $this->hasOne(Booking::class);
+    }
 }
