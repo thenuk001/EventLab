@@ -5,18 +5,23 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\EventController;
 use App\Http\Controllers\Public\WhatsappController;
+
 use App\Http\Controllers\SuperAdmin\DashboardController as SuperDashboardController;
 use App\Http\Controllers\SuperAdmin\EventController as SuperAdminEventController;
 use App\Http\Controllers\SuperAdmin\UserController as SuperAdminUserController;
+use App\Http\Controllers\SuperAdmin\CompanyController as SuperAdminCompanyController;
+
 use App\Http\Controllers\Company\DashboardController as CompanyDashboardController;
 use App\Http\Controllers\Company\EventController as CompanyEventController;
 use App\Http\Controllers\Company\TicketTypeController as CompanyTicketTypeController;
 use App\Http\Controllers\Company\WhatsappCtaController as CompanyWhatsappCtaController;
 use App\Http\Controllers\Company\EnquiryController as CompanyEnquiryController;
 use App\Http\Controllers\Company\BookingController as CompanyBookingController;
+
 use App\Http\Controllers\Support\DashboardController as SupportDashboardController;
 use App\Http\Controllers\Support\EnquiryController as SupportEnquiryController;
 use App\Http\Controllers\Support\CheckInController as SupportCheckInController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -49,6 +54,17 @@ Route::middleware(['auth', 'verified', 'role:super_admin'])
         Route::patch('/users/{user}/deactivate', [SuperAdminUserController::class, 'deactivate'])->name('users.deactivate');
         Route::patch('/users/{user}/block', [SuperAdminUserController::class, 'block'])->name('users.block');
         Route::patch('/users/{user}/reset-password', [SuperAdminUserController::class, 'resetPassword'])->name('users.reset-password');
+
+        Route::get('/companies', [SuperAdminCompanyController::class, 'index'])->name('companies.index');
+        Route::get('/companies/create', [SuperAdminCompanyController::class, 'create'])->name('companies.create');
+        Route::post('/companies', [SuperAdminCompanyController::class, 'store'])->name('companies.store');
+        Route::get('/companies/{company}/edit', [SuperAdminCompanyController::class, 'edit'])->name('companies.edit');
+        Route::put('/companies/{company}', [SuperAdminCompanyController::class, 'update'])->name('companies.update');
+        Route::patch('/companies/{company}/approve', [SuperAdminCompanyController::class, 'approve'])->name('companies.approve');
+        Route::patch('/companies/{company}/activate', [SuperAdminCompanyController::class, 'activate'])->name('companies.activate');
+        Route::patch('/companies/{company}/deactivate', [SuperAdminCompanyController::class, 'deactivate'])->name('companies.deactivate');
+        Route::patch('/companies/{company}/block', [SuperAdminCompanyController::class, 'block'])->name('companies.block');
+        Route::patch('/companies/{company}/reject', [SuperAdminCompanyController::class, 'reject'])->name('companies.reject');
     });
 
 Route::middleware(['auth', 'verified', 'role:company_admin'])

@@ -15,6 +15,7 @@ class Company extends Model
         'whatsapp_number',
         'status',
         'approval_status',
+        'approval_comment',
     ];
 
     public function users()
