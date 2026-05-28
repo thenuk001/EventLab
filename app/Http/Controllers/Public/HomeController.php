@@ -11,7 +11,8 @@ class HomeController extends Controller
     public function index()
     {
         $categories = Category::where('is_active', true)
-            ->take(5)
+            ->latest()
+            ->take(6)
             ->get();
 
         $featuredEvents = Event::with(['category', 'company', 'ticketTypes'])
@@ -19,14 +20,14 @@ class HomeController extends Controller
             ->where('approval_status', 'approved')
             ->where('is_featured', true)
             ->latest()
-            ->take(6)
+            ->take(8)
             ->get();
 
         $latestEvents = Event::with(['category', 'company', 'ticketTypes'])
             ->where('status', 'published')
             ->where('approval_status', 'approved')
             ->latest()
-            ->take(3)
+            ->take(6)
             ->get();
 
         return view('public.home', compact('categories', 'featuredEvents', 'latestEvents'));
