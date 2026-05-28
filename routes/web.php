@@ -10,6 +10,7 @@ use App\Http\Controllers\SuperAdmin\DashboardController as SuperDashboardControl
 use App\Http\Controllers\SuperAdmin\EventController as SuperAdminEventController;
 use App\Http\Controllers\SuperAdmin\UserController as SuperAdminUserController;
 use App\Http\Controllers\SuperAdmin\CompanyController as SuperAdminCompanyController;
+use App\Http\Controllers\SuperAdmin\ReportController as SuperAdminReportController;
 
 use App\Http\Controllers\Company\DashboardController as CompanyDashboardController;
 use App\Http\Controllers\Company\EventController as CompanyEventController;
@@ -24,26 +25,52 @@ use App\Http\Controllers\Support\CheckInController as SupportCheckInController;
 
 use Illuminate\Support\Facades\Route;
 
-// Public routes
+/*
+|--------------------------------------------------------------------------
+| Public Routes
+|--------------------------------------------------------------------------
+*/
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
 Route::get('/events', [EventController::class, 'index'])->name('events.index');
 Route::get('/events/{event:slug}', [EventController::class, 'show'])->name('events.show');
 Route::get('/events/{event:slug}/whatsapp', [WhatsappController::class, 'redirect'])->name('events.whatsapp');
 
-// Dashboard redirect route
+/*
+|--------------------------------------------------------------------------
+| Dashboard Redirect
+|--------------------------------------------------------------------------
+*/
+
 Route::get('/dashboard', DashboardRedirectController::class)
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-// Super Admin routes
+/*
+|--------------------------------------------------------------------------
+| Super Admin Routes
+|--------------------------------------------------------------------------
+*/
+
 Route::middleware(['auth', 'verified', 'role:super_admin'])
     ->prefix('super-admin')
     ->name('super.')
     ->group(function () {
-        // Dashboard
         Route::get('/dashboard', [SuperDashboardController::class, 'index'])->name('dashboard');
 
-        // Event approvals & management
+        /*
+        |--------------------------------------------------------------------------
+        | Super Admin Reports
+        |--------------------------------------------------------------------------
+        */
+        Route::get('/reports', [SuperAdminReportController::class, 'index'])->name('reports.index');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Super Admin Event Management
+        |--------------------------------------------------------------------------
+        */
         Route::get('/events', [SuperAdminEventController::class, 'index'])->name('events.index');
         Route::get('/events/create', [SuperAdminEventController::class, 'create'])->name('events.create');
         Route::post('/events', [SuperAdminEventController::class, 'store'])->name('events.store');
@@ -51,7 +78,11 @@ Route::middleware(['auth', 'verified', 'role:super_admin'])
         Route::patch('/events/{event}/reject', [SuperAdminEventController::class, 'reject'])->name('events.reject');
         Route::patch('/events/{event}/toggle-featured', [SuperAdminEventController::class, 'toggleFeatured'])->name('events.toggle-featured');
 
-        // Super Admin user management
+        /*
+        |--------------------------------------------------------------------------
+        | Super Admin User Management
+        |--------------------------------------------------------------------------
+        */
         Route::get('/users', [SuperAdminUserController::class, 'index'])->name('users.index');
         Route::get('/users/create', [SuperAdminUserController::class, 'create'])->name('users.create');
         Route::post('/users', [SuperAdminUserController::class, 'store'])->name('users.store');
@@ -62,7 +93,11 @@ Route::middleware(['auth', 'verified', 'role:super_admin'])
         Route::patch('/users/{user}/block', [SuperAdminUserController::class, 'block'])->name('users.block');
         Route::patch('/users/{user}/reset-password', [SuperAdminUserController::class, 'resetPassword'])->name('users.reset-password');
 
-        // Company management
+        /*
+        |--------------------------------------------------------------------------
+        | Super Admin Company Management
+        |--------------------------------------------------------------------------
+        */
         Route::get('/companies', [SuperAdminCompanyController::class, 'index'])->name('companies.index');
         Route::get('/companies/create', [SuperAdminCompanyController::class, 'create'])->name('companies.create');
         Route::post('/companies', [SuperAdminCompanyController::class, 'store'])->name('companies.store');
@@ -75,21 +110,34 @@ Route::middleware(['auth', 'verified', 'role:super_admin'])
         Route::patch('/companies/{company}/reject', [SuperAdminCompanyController::class, 'reject'])->name('companies.reject');
     });
 
-// Company Admin routes
+/*
+|--------------------------------------------------------------------------
+| Company Admin Routes
+|--------------------------------------------------------------------------
+*/
+
 Route::middleware(['auth', 'verified', 'role:company_admin'])
     ->prefix('company')
     ->name('company.')
     ->group(function () {
         Route::get('/dashboard', [CompanyDashboardController::class, 'index'])->name('dashboard');
 
-        // Event management
+        /*
+        |--------------------------------------------------------------------------
+        | Company Event Management
+        |--------------------------------------------------------------------------
+        */
         Route::get('/events', [CompanyEventController::class, 'index'])->name('events.index');
         Route::get('/events/create', [CompanyEventController::class, 'create'])->name('events.create');
         Route::post('/events', [CompanyEventController::class, 'store'])->name('events.store');
         Route::get('/events/{event}/edit', [CompanyEventController::class, 'edit'])->name('events.edit');
         Route::put('/events/{event}', [CompanyEventController::class, 'update'])->name('events.update');
 
-        // Ticket Types
+        /*
+        |--------------------------------------------------------------------------
+        | Company Ticket Types
+        |--------------------------------------------------------------------------
+        */
         Route::get('/events/{event}/tickets', [CompanyTicketTypeController::class, 'index'])->name('events.tickets.index');
         Route::get('/events/{event}/tickets/create', [CompanyTicketTypeController::class, 'create'])->name('events.tickets.create');
         Route::post('/events/{event}/tickets', [CompanyTicketTypeController::class, 'store'])->name('events.tickets.store');
@@ -97,37 +145,69 @@ Route::middleware(['auth', 'verified', 'role:company_admin'])
         Route::put('/tickets/{ticketType}', [CompanyTicketTypeController::class, 'update'])->name('tickets.update');
         Route::delete('/tickets/{ticketType}', [CompanyTicketTypeController::class, 'destroy'])->name('tickets.destroy');
 
-        // WhatsApp CTA
+        /*
+        |--------------------------------------------------------------------------
+        | Company WhatsApp CTA
+        |--------------------------------------------------------------------------
+        */
         Route::get('/events/{event}/whatsapp', [CompanyWhatsappCtaController::class, 'edit'])->name('events.whatsapp.edit');
         Route::put('/events/{event}/whatsapp', [CompanyWhatsappCtaController::class, 'update'])->name('events.whatsapp.update');
 
-        // Enquiries
+        /*
+        |--------------------------------------------------------------------------
+        | Company Enquiries
+        |--------------------------------------------------------------------------
+        */
         Route::get('/enquiries', [CompanyEnquiryController::class, 'index'])->name('enquiries.index');
         Route::patch('/enquiries/{enquiry}/status', [CompanyEnquiryController::class, 'updateStatus'])->name('enquiries.update-status');
 
-        // Bookings
+        /*
+        |--------------------------------------------------------------------------
+        | Company Bookings
+        |--------------------------------------------------------------------------
+        */
         Route::get('/bookings', [CompanyBookingController::class, 'index'])->name('bookings.index');
         Route::get('/bookings/{booking}', [CompanyBookingController::class, 'show'])->name('bookings.show');
         Route::get('/enquiries/{enquiry}/booking/create', [CompanyBookingController::class, 'createFromEnquiry'])->name('enquiries.booking.create');
         Route::post('/enquiries/{enquiry}/booking', [CompanyBookingController::class, 'storeFromEnquiry'])->name('enquiries.booking.store');
     });
 
-// Support Staff routes
+/*
+|--------------------------------------------------------------------------
+| Support Staff Routes
+|--------------------------------------------------------------------------
+*/
+
 Route::middleware(['auth', 'verified', 'role:support_staff'])
     ->prefix('support')
     ->name('support.')
     ->group(function () {
         Route::get('/dashboard', [SupportDashboardController::class, 'index'])->name('dashboard');
 
+        /*
+        |--------------------------------------------------------------------------
+        | Support Enquiries
+        |--------------------------------------------------------------------------
+        */
         Route::get('/enquiries', [SupportEnquiryController::class, 'index'])->name('enquiries.index');
         Route::patch('/enquiries/{enquiry}/status', [SupportEnquiryController::class, 'updateStatus'])->name('enquiries.update-status');
 
+        /*
+        |--------------------------------------------------------------------------
+        | Support QR Check-in
+        |--------------------------------------------------------------------------
+        */
         Route::get('/check-in', [SupportCheckInController::class, 'index'])->name('check-in.index');
         Route::post('/check-in/search', [SupportCheckInController::class, 'search'])->name('check-in.search');
         Route::post('/check-in/{qrTicket}/confirm', [SupportCheckInController::class, 'confirm'])->name('check-in.confirm');
     });
 
-// Authenticated user routes
+/*
+|--------------------------------------------------------------------------
+| Profile Routes
+|--------------------------------------------------------------------------
+*/
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
